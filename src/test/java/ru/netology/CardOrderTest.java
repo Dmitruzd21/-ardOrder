@@ -40,7 +40,7 @@ public class CardOrderTest {
 
     @Test
     public void shouldOrderCard() {
-        driver.get("http//:localhost:9999");
+        driver.get("http://localhost:9999");
         List<WebElement> elements = driver.findElements(By.className("input__control"));
         elements.get(0).sendKeys("Иванов Иван");
         elements.get(1).sendKeys("+79896789034");
