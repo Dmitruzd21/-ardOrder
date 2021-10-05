@@ -37,17 +37,80 @@ public class CardOrderTest {
         driver.quit();
         driver = null;
     }
-
+    // Верное заполнение полей (примитивный тест)
     @Test
-    public void shouldOrderCard() {
+    public void shouldOrderCardWithoutCssSelectors() {
         driver.get("http://localhost:9999");
         List<WebElement> elements = driver.findElements(By.className("input__control"));
         elements.get(0).sendKeys("Иванов Иван");
         elements.get(1).sendKeys("+79896789034");
-        driver.findElement(By.className("checkbox__control")).click();
+        driver.findElement(By.className("checkbox__box")).click();
         driver.findElement(By.className("button")).click();
-        String expectedMessage = "Ваша заявка успешно отправлена! Наш менеджер свяжется с вами в ближайшее время";
+        String expectedMessage = "Ваша заявка успешно отправлена! Наш менеджер свяжется с вами в ближайшее время.";
         String actualMessage = driver.findElement(By.className("paragraph_theme_alfa-on-white")).getText();
-        Assertions.assertEquals(expectedMessage, actualMessage);
+        Assertions.assertEquals(expectedMessage, actualMessage.trim());
+    }
+    // Верное заполнение полей (с SCC селекторами)
+    @Test
+    public void shouldOrderCardWithCssSelectors() {
+        driver.get("http://localhost:9999");
+        driver.findElement(By.cssSelector("[type='text']")).sendKeys("Иванов Иван");
+        driver.findElement(By.cssSelector("[type='tel']")).sendKeys("+79896789034");
+        driver.findElement(By.cssSelector(".checkbox__box")).click();
+        driver.findElement(By.cssSelector("button")).click();
+        String expectedMessage = "Ваша заявка успешно отправлена! Наш менеджер свяжется с вами в ближайшее время.";
+        String actualMessage = driver.findElement(By.cssSelector(".paragraph_theme_alfa-on-white")).getText();
+        Assertions.assertEquals(expectedMessage, actualMessage.trim());
+    }
+
+    // Неверно заполненное поле для ввода ФИО
+    @Test
+    public void shouldIncorrectFillingOfTheFullName () {
+        driver.get("http://localhost:9999");
+        driver.findElement(By.cssSelector("[type='text']")).sendKeys("Ivanov Ivan");
+        driver.findElement(By.cssSelector("[type='tel']")).sendKeys("+79896789034");
+        driver.findElement(By.cssSelector(".checkbox__box")).click();
+        driver.findElement(By.cssSelector("button")).click();
+        String expectedMessage = "Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы.";
+        String actualMessage = driver.findElement(By.cssSelector("[data-test-id ='name'] .input_sub")).getText();
+        Assertions.assertEquals(expectedMessage, actualMessage.trim());
+    }
+
+    // Пустое после для вводо ФИО
+    @Test
+    public void shouldEmptyFieldWithFullName () {
+        driver.get("http://localhost:9999");
+        driver.findElement(By.cssSelector("[type='text']")).sendKeys("");
+        driver.findElement(By.cssSelector("[type='tel']")).sendKeys("+79896789034");
+        driver.findElement(By.cssSelector(".checkbox__box")).click();
+        driver.findElement(By.cssSelector("button")).click();
+        String expectedMessage = "Поле обязательно для заполнения";
+        String actualMessage = driver.findElement(By.cssSelector("[]")).getText();
+        Assertions.assertEquals(expectedMessage, actualMessage.trim());
+    }
+    // Неверно заполненное после для ввода номера телефоно
+    @Test
+    public void shouldIncorrectFillingOfThePhoneNumber () {
+        driver.get("http://localhost:9999");
+        driver.findElement(By.cssSelector("[type='text']")).sendKeys("Иванов Иван");
+        driver.findElement(By.cssSelector("[type='tel']")).sendKeys("9896789034");
+        driver.findElement(By.cssSelector(".checkbox__box")).click();
+        driver.findElement(By.cssSelector("button")).click();
+        String expectedMessage = "Телефон указан неверно. Должно быть 11 цифр, например, +79012345678.";
+        String actualMessage = driver.findElement(By.cssSelector("[]")).getText();
+        Assertions.assertEquals(expectedMessage, actualMessage.trim());
+    }
+
+    // Пустое поле для ввода номера телефона
+    @Test
+    public void shouldEmptyFieldWithPhoneNumber () {
+        driver.get("http://localhost:9999");
+        driver.findElement(By.cssSelector("[type='text']")).sendKeys("Иванов Иван");
+        driver.findElement(By.cssSelector("[type='tel']")).sendKeys("");
+        driver.findElement(By.cssSelector(".checkbox__box")).click();
+        driver.findElement(By.cssSelector("button")).click();
+        String expectedMessage = "Поле обязательно для заполнения";
+        String actualMessage = driver.findElement(By.cssSelector("[]")).getText();
+        Assertions.assertEquals(expectedMessage, actualMessage.trim());
     }
 }
