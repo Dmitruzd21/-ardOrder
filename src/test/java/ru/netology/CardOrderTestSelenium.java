@@ -11,7 +11,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import java.util.List;
 
 
-public class CardOrderTest {
+public class CardOrderTestSelenium {
     private WebDriver driver;
 
     @BeforeAll

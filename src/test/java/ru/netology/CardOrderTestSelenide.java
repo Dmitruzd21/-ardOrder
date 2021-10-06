@@ -7,15 +7,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static com.codeborne.selenide.Condition.exactText;
+import static com.codeborne.selenide.Condition.exist;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
 
 public class CardOrderTestSelenide {
-
-    @BeforeAll
-    static void setUpAll() {
-        WebDriverManager.chromedriver().setup();
-    }
 
     @BeforeEach
     void setUp() {
@@ -84,7 +80,7 @@ public class CardOrderTestSelenide {
         $("[type='text']").setValue("Иванов Иван");
         $("[type='tel']").setValue("+79012345678");
         $("button").click();
-        //$(".input_invalid").should(exist);
+        $(".input_invalid").should(exist);
     }
 
 }
