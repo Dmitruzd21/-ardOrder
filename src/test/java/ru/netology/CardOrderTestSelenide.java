@@ -1,17 +1,25 @@
 package ru.netology;
 
 import com.codeborne.selenide.Configuration;
+import io.github.bonigarcia.wdm.WebDriverManager;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
 
 public class CardOrderTestSelenide {
 
+    @BeforeAll
+    static void setUpAll() {
+        WebDriverManager.chromedriver().setup();
+    }
+
     @BeforeEach
     void setUp() {
-        Configuration.browser ="chrome";
+        Configuration.browser = "chrome";
     }
 
     // Верное заполнение полей (с SCC селекторами)
